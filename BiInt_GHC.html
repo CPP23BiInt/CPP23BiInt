@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>BiInt_GHC</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library BiInt_GHC</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Export</span> <span class="id" title="var">ListNotations</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">PeanoNat</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Lia</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ensembles</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">gen</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Delimit</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">My_scope</span> <span class="id" title="keyword">with</span> <span class="id" title="var">M</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">My_scope</span>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x :: l" := (<span class="id" title="var">cons</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ ]" := <span class="id" title="var">nil</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ x ; .. ; y ]" := (<span class="id" title="var">cons</span> <span class="id" title="var">x</span> .. (<span class="id" title="var">cons</span> <span class="id" title="var">y</span> <span class="id" title="var">nil</span>) ..).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">BPropF</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;| <span class="id" title="var">Var</span> : <span class="id" title="var">nat</span> -&gt; <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">Bot</span> : <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">Top</span> : <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">And</span> : <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">Or</span> : <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">Imp</span> : <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span><br/>
+&nbsp;| <span class="id" title="var">Excl</span> : <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span> -&gt; <span class="id" title="var">BPropF</span><br/>
+.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;# P" := (<span class="id" title="var">Var</span> <span class="id" title="var">P</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 1) : <span class="id" title="var">My_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;A --&gt; B" := (<span class="id" title="var">Imp</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 16, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>) : <span class="id" title="var">My_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wNeg</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) := <span class="id" title="var">Excl</span> <span class="id" title="var">Top</span> <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Neg</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) := <span class="id" title="var">Imp</span> <span class="id" title="var">A</span> <span class="id" title="var">Bot</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">DN_form</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">A</span> : (<span class="id" title="var">BPropF</span>)) : (<span class="id" title="var">BPropF</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;| 0 =&gt; <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m</span> =&gt; <span class="id" title="var">Neg</span> (<span class="id" title="var">wNeg</span> (<span class="id" title="var">DN_form</span> <span class="id" title="var">m</span> <span class="id" title="var">A</span>))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">DN_clos_set</span> (<span class="id" title="var">Γ</span> : @<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)): @<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">InitClo</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>, <span class="id" title="var">In</span> <span class="id" title="var">_</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">DN_clos_set</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">IndClo</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>,  <span class="id" title="var">DN_clos_set</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span> -&gt; <span class="id" title="var">DN_clos_set</span> <span class="id" title="var">Γ</span> (<span class="id" title="var">Neg</span> (<span class="id" title="var">wNeg</span> <span class="id" title="var">A</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eq_dec_form</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">BPropF</span>, {<span class="id" title="var">x</span> = <span class="id" title="var">y</span>}+{<span class="id" title="var">x</span> &lt;&gt; <span class="id" title="var">y</span>}.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">decide</span> <span class="id" title="var">equality</span>. <span class="id" title="var">decide</span> <span class="id" title="var">equality</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">size_form</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">A</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;| # <span class="id" title="var">P</span> =&gt; 1<br/>
+&nbsp;| <span class="id" title="var">Bot</span> =&gt; 1<br/>
+&nbsp;| <span class="id" title="var">Top</span> =&gt; 1<br/>
+&nbsp;| <span class="id" title="var">And</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; 1 + (<span class="id" title="var">size_form</span> <span class="id" title="var">B</span>) + (<span class="id" title="var">size_form</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Or</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; 1 + (<span class="id" title="var">size_form</span> <span class="id" title="var">B</span>) + (<span class="id" title="var">size_form</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Imp</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; 1 + (<span class="id" title="var">size_form</span> <span class="id" title="var">B</span>) + (<span class="id" title="var">size_form</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Excl</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; 1 + (<span class="id" title="var">size_form</span> <span class="id" title="var">B</span>) + (<span class="id" title="var">size_form</span> <span class="id" title="var">C</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="tactic">subst</span> (<span class="id" title="var">f</span> : <span class="id" title="var">nat</span> -&gt; (<span class="id" title="var">BPropF</span>)) (<span class="id" title="var">A</span> : (<span class="id" title="var">BPropF</span>)) : (<span class="id" title="var">BPropF</span>) :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">A</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;| # <span class="id" title="var">P</span> =&gt; (<span class="id" title="var">f</span> <span class="id" title="var">P</span>)<br/>
+&nbsp;| <span class="id" title="var">Bot</span> =&gt; <span class="id" title="var">Bot</span><br/>
+&nbsp;| <span class="id" title="var">Top</span> =&gt; <span class="id" title="var">Top</span><br/>
+&nbsp;| <span class="id" title="var">And</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; <span class="id" title="var">And</span> (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Or</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; <span class="id" title="var">Or</span> (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Imp</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; <span class="id" title="var">Imp</span> (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">C</span>)<br/>
+&nbsp;| <span class="id" title="var">Excl</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> =&gt; <span class="id" title="var">Excl</span> (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">B</span>) (<span class="id" title="tactic">subst</span> <span class="id" title="var">f</span> <span class="id" title="var">C</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">is_atomicT</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">exists</span> (<span class="id" title="var">P</span> : <span class="id" title="var">nat</span>), <span class="id" title="var">A</span> = # <span class="id" title="var">P</span>) + (<span class="id" title="var">A</span> = <span class="id" title="var">Bot</span>) + (<span class="id" title="var">A</span> = <span class="id" title="var">Top</span>).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">is_Atomic</span> (<span class="id" title="var">Γ</span> : @<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>), (<span class="id" title="var">Γ</span> <span class="id" title="var">A</span>) -&gt; ((<span class="id" title="tactic">exists</span> (<span class="id" title="var">P</span> : <span class="id" title="var">nat</span>), <span class="id" title="var">A</span> = # <span class="id" title="var">P</span>) + (<span class="id" title="var">A</span> = <span class="id" title="var">Bot</span>) + (<span class="id" title="var">A</span> = <span class="id" title="var">Top</span>)).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA1</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>) --&gt; ((<span class="id" title="var">B</span> --&gt; <span class="id" title="var">C</span>) --&gt; (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">C</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA2</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := <span class="id" title="var">A</span> --&gt; (<span class="id" title="var">Or</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA3</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := <span class="id" title="var">B</span> --&gt; (<span class="id" title="var">Or</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA4</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">C</span>) --&gt; ((<span class="id" title="var">B</span> --&gt; <span class="id" title="var">C</span>) --&gt; ((<span class="id" title="var">Or</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; <span class="id" title="var">C</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA5</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">And</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; <span class="id" title="var">A</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA6</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">And</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; <span class="id" title="var">B</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA7</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>) --&gt; ((<span class="id" title="var">A</span> --&gt; <span class="id" title="var">C</span>) --&gt; (<span class="id" title="var">A</span> --&gt; (<span class="id" title="var">And</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>))).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA8</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">A</span> --&gt; (<span class="id" title="var">B</span> --&gt; <span class="id" title="var">C</span>)) --&gt; ((<span class="id" title="var">And</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; <span class="id" title="var">C</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA9</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := ((<span class="id" title="var">And</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; <span class="id" title="var">C</span>) --&gt; (<span class="id" title="var">A</span> --&gt; (<span class="id" title="var">B</span> --&gt; <span class="id" title="var">C</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA10</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>) --&gt; ((<span class="id" title="var">Neg</span> <span class="id" title="var">B</span>) --&gt; (<span class="id" title="var">Neg</span> <span class="id" title="var">A</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA11</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := <span class="id" title="var">A</span> --&gt; (<span class="id" title="var">Or</span> <span class="id" title="var">B</span> (<span class="id" title="var">Excl</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA12</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">Excl</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) --&gt; (<span class="id" title="var">wNeg</span> (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA13</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">Excl</span> (<span class="id" title="var">Excl</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>) <span class="id" title="var">C</span>) --&gt; (<span class="id" title="var">Excl</span> <span class="id" title="var">A</span> (<span class="id" title="var">Or</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA14</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := (<span class="id" title="var">Neg</span> (<span class="id" title="var">Excl</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>)) --&gt; (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA15</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := <span class="id" title="var">A</span> --&gt; <span class="id" title="var">Top</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">RA16</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="var">BPropF</span> := <span class="id" title="var">Bot</span> --&gt; <span class="id" title="var">A</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">BIAxioms</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;| <span class="id" title="var">RA1_I</span> : (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA1</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA2_I</span> : (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA2</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA3_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA3</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA4_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA4</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA5_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA5</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA6_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA6</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA7_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA7</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA8_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA8</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA9_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA9</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA10_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA10</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA11_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA11</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA12_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA12</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA13_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA13</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA14_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA14</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA15_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA15</span> <span class="id" title="var">B</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span><br/>
+&nbsp;| <span class="id" title="var">RA16_I</span> :  (<span class="id" title="tactic">exists</span> <span class="id" title="var">B</span>, <span class="id" title="var">A</span> = (<span class="id" title="var">RA16</span> <span class="id" title="var">B</span>)) -&gt; <span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">IdRule</span> : <span class="id" title="var">rls</span> ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>)) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">IdRule_I</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> (<span class="id" title="var">Γ</span> : @<span class="id" title="var">Ensemble</span> <span class="id" title="var">_</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Γ</span> <span class="id" title="var">A</span>) -&gt; (<span class="id" title="var">IdRule</span> [] (<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">AxRule</span> : <span class="id" title="var">rls</span> ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>)) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">AxRule_I</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">Γ</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">BIAxioms</span> <span class="id" title="var">A</span>) -&gt; <span class="id" title="var">AxRule</span> [] (<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span>)<br/>
+.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">MPRule</span> : <span class="id" title="var">rls</span> ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>)) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">MPRule_I</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">Γ</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">MPRule</span> [(<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> (<span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>)); (<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span>)]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> <span class="id" title="var">B</span>)<br/>
+.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">DNwRule</span> : <span class="id" title="var">rls</span> ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>)) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">DNwRule_I</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) <span class="id" title="var">Γ</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DNwRule</span> [(<span class="id" title="var">pair</span> (@<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>)) <span class="id" title="var">A</span>)]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> (<span class="id" title="var">Neg</span> (<span class="id" title="var">wNeg</span> <span class="id" title="var">A</span>)))<br/>
+.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">DNsRule</span> : <span class="id" title="var">rls</span> ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>)) :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">DNsRule_I</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>) <span class="id" title="var">Γ</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">DNsRule</span> [(<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> <span class="id" title="var">A</span>)]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">pair</span> <span class="id" title="var">Γ</span> (<span class="id" title="var">Neg</span> (<span class="id" title="var">wNeg</span> <span class="id" title="var">A</span>)))<br/>
+.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">wBIH_rules</span> (<span class="id" title="var">s</span> : ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>))) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Id</span> : <span class="id" title="var">IdRule</span> [] <span class="id" title="var">s</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Ax</span> : <span class="id" title="var">AxRule</span> [] <span class="id" title="var">s</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">MP</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">ps</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">prem</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">prem</span> <span class="id" title="var">ps</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">prem</span>) -&gt; <span class="id" title="var">MPRule</span> <span class="id" title="var">ps</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">DNw</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">ps</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">prem</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">prem</span> <span class="id" title="var">ps</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">prem</span>) -&gt; <span class="id" title="var">DNwRule</span> <span class="id" title="var">ps</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span><br/>
+.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">sBIH_rules</span> (<span class="id" title="var">s</span> : ((@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) * (<span class="id" title="var">BPropF</span>))) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Ids</span> : <span class="id" title="var">IdRule</span> [] <span class="id" title="var">s</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Axs</span> : <span class="id" title="var">AxRule</span> [] <span class="id" title="var">s</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">MPs</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">ps</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">prem</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">prem</span> <span class="id" title="var">ps</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">prem</span>) -&gt; <span class="id" title="var">MPRule</span> <span class="id" title="var">ps</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">DNs</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">ps</span>, (<span class="id" title="keyword">forall</span> <span class="id" title="var">prem</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">prem</span> <span class="id" title="var">ps</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">prem</span>) -&gt; <span class="id" title="var">DNsRule</span> <span class="id" title="var">ps</span> <span class="id" title="var">s</span> -&gt; <span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span><br/>
+.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">list_disj</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">BPropF</span>)) : <span class="id" title="var">BPropF</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;| <span class="id" title="var">nil</span> =&gt; <span class="id" title="var">Bot</span><br/>
+&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> =&gt; <span class="id" title="var">Or</span> <span class="id" title="var">h</span> (<span class="id" title="var">list_disj</span> <span class="id" title="var">t</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">wpair_derrec</span> (<span class="id" title="var">G</span> : <span class="id" title="var">prod</span> (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>))) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">BPropF</span>)), <span class="id" title="var">NoDup</span> <span class="id" title="var">l</span> /\ (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span> -&gt; ((<span class="id" title="var">snd</span> <span class="id" title="var">G</span>) <span class="id" title="var">A</span>)) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">wBIH_rules</span> (<span class="id" title="var">fst</span> <span class="id" title="var">G</span>, <span class="id" title="var">list_disj</span> <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">spair_derrec</span> (<span class="id" title="var">G</span> : <span class="id" title="var">prod</span> (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>))) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">exists</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">BPropF</span>)), <span class="id" title="var">NoDup</span> <span class="id" title="var">l</span> /\ (<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>, <span class="id" title="var">List.In</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span> -&gt; ((<span class="id" title="var">snd</span> <span class="id" title="var">G</span>) <span class="id" title="var">A</span>)) /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">sBIH_rules</span> (<span class="id" title="var">fst</span> <span class="id" title="var">G</span>, <span class="id" title="var">list_disj</span> <span class="id" title="var">l</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">complete</span> (<span class="id" title="var">G</span> : <span class="id" title="var">prod</span> (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>)) (@<span class="id" title="var">Ensemble</span> (<span class="id" title="var">BPropF</span>))) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">A</span> : <span class="id" title="var">BPropF</span>), (<span class="id" title="var">fst</span> <span class="id" title="var">G</span>) <span class="id" title="var">A</span> \/ (<span class="id" title="var">snd</span> <span class="id" title="var">G</span>) <span class="id" title="var">A</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

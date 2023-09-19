@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>BiInt_extens_interactions</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library BiInt_extens_interactions</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">List</span>.<br/>
+<span class="id" title="keyword">Export</span> <span class="id" title="var">ListNotations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">PeanoNat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Ensembles</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">BiInt_GHC</span>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">BiInt_logics</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">extens_diff_sBIH</span> : <span class="id" title="keyword">forall</span> (<span class="id" title="var">p</span> : <span class="id" title="var">nat</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">sBIH_rules</span> (<span class="id" title="var">Singleton</span> <span class="id" title="var">_</span> (# <span class="id" title="var">p</span>), <span class="id" title="var">Neg</span> (<span class="id" title="var">wNeg</span> (# <span class="id" title="var">p</span>)))).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intro</span> <span class="id" title="var">p</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNs</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">ps</span>:=[(<span class="id" title="var">Singleton</span> <span class="id" title="var">_</span> (# <span class="id" title="var">p</span>), #<span class="id" title="var">p</span>)]).<br/>
+<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Ids</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IdRule_I</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">In_singleton</span>.<br/>
+<span class="id" title="tactic">inversion</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNsRule_I</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sBIH_extens_wBIH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">s</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span>) -&gt; (<span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">D</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">D</span>.<br/>
+- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Ids</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IdRule_I</span>. <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">Axs</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">AxRule_I</span>. <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">J1</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>) [(<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>); (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>) <span class="id" title="var">J1</span>). <span class="id" title="tactic">assert</span> (<span class="id" title="var">J2</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>) [(<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>); (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_cons</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>) <span class="id" title="var">J2</span>). <span class="id" title="tactic">apply</span> <span class="id" title="var">MPs</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">ps</span>:=[(<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span> --&gt; <span class="id" title="var">B</span>); (<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>)]).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">MPRule_I</span>.<br/>
+- <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">assert</span> (<span class="id" title="var">J1</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A</span>) [(<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A</span>) <span class="id" title="var">J1</span>). <span class="id" title="tactic">assert</span> (<span class="id" title="var">Included</span> <span class="id" title="var">_</span> (<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>) <span class="id" title="var">Γ</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>. <span class="id" title="tactic">intro</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">pose</span> (@<span class="id" title="var">sBIH_monot</span> (<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A</span>) <span class="id" title="var">s</span> <span class="id" title="var">Γ</span> <span class="id" title="var">H2</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">DNs</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">ps</span>:=[(<span class="id" title="var">Γ</span>, <span class="id" title="var">A</span>)]). <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H3</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H4</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNsRule_I</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">pair_sBIH_extens_wBIH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">P</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">wpair_derrec</span> <span class="id" title="var">P</span>) -&gt; (<span class="id" title="var">spair_derrec</span> <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">wpair</span>.<br/>
+<span class="id" title="tactic">unfold</span> <span class="id" title="var">spair_derrec</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">wpair_derrec</span> <span class="id" title="tactic">in</span> <span class="id" title="var">wpair</span>.<br/>
+<span class="id" title="tactic">destruct</span> <span class="id" title="var">wpair</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H0</span>. <span class="id" title="tactic">exists</span> <span class="id" title="var">x</span>. <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span> ; <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="tactic">apply</span> <span class="id" title="var">sBIH_extens_wBIH</span>. <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sBIH_same_thms_wBIH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">s</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>, ((<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A</span>) = <span class="id" title="var">s</span>) -&gt; (<span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">s</span> <span class="id" title="var">D</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">D</span>.<br/>
+- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Id</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IdRule_I</span>. <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Ax</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">AxRule_I</span>. <span class="id" title="tactic">auto</span>.<br/>
+- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H3</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">J1</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>) [(<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>); (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>) <span class="id" title="var">J1</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">J2</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>) [(<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>); (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_cons</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>) <span class="id" title="var">J2</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">MP</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">ps</span>:=[(<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>); (<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A0</span>)]).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">A</span>:=<span class="id" title="var">A0</span> --&gt; <span class="id" title="var">A</span>). <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">inversion</span> <span class="id" title="var">H4</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">w0</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">A</span>:=<span class="id" title="var">A0</span>). <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H5</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">MPRule_I</span>.<br/>
+- <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">id</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">subst</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H3</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">J1</span>: <span class="id" title="var">List.In</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>) [(<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>)]). <span class="id" title="tactic">apply</span> <span class="id" title="var">in_eq</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">pose</span> (<span class="id" title="var">H0</span> (<span class="id" title="var">Empty_set</span> (<span class="id" title="var">BPropF</span>), <span class="id" title="var">A0</span>) <span class="id" title="var">J1</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">DNw</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">ps</span>:=[(<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A0</span>)]). <span class="id" title="tactic">intros</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H2</span>. <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">w</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">A</span>:=<span class="id" title="var">A0</span>). <span class="id" title="tactic">auto</span>. <span class="id" title="tactic">inversion</span> <span class="id" title="var">H4</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">DNwRule_I</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">wBIH_same_thms_sBIH</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">s</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">wBIH_rules</span> <span class="id" title="var">s</span>) -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>, ((<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A</span>) = <span class="id" title="var">s</span>) -&gt; (<span class="id" title="var">sBIH_rules</span> <span class="id" title="var">s</span>)).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">sBIH_extens_wBIH</span>. <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">wBIH_sBIH_same_thms</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">A</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">wBIH_rules</span> (<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A</span>) &lt;-&gt; <span class="id" title="var">sBIH_rules</span> (<span class="id" title="var">Empty_set</span> <span class="id" title="var">_</span>, <span class="id" title="var">A</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>. <span class="id" title="tactic">split</span> ; <span class="id" title="tactic">intro</span>.<br/>
+<span class="id" title="tactic">apply</span> (<span class="id" title="var">wBIH_same_thms_sBIH</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span> <span class="id" title="var">A</span>) ; <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="tactic">apply</span> (<span class="id" title="var">sBIH_same_thms_wBIH</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span> <span class="id" title="var">A</span>) ; <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
